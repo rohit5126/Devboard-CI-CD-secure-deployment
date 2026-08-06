@@ -1,7 +1,6 @@
 name: merge
 on:
-  push:
-    branches: [master]
+  workflow_dispatch: 
 jobs:
   docker-Sonar-Scan:
     uses: ./.github/workflows/Sonarcube.yml
