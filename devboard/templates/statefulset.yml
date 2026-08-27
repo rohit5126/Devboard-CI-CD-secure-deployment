@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: devboard-app
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-2"
+spec:
+  type: {{ .Values.postgres.service.type }}
+  clusterIP: None          # headless - StatefulSet pods get stable DNS names
+  selector:
+    apps: postgres
+  ports:
+    - port: {{ .Values.postgres.service.port }}
+      targetPort: {{ .Values.postgres.service.port }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    apps: postgres
+  namespace: devboard-app
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-1"
+spec:
+  serviceName: "postgres"
+  replicas: {{ .Values.postgres.replicaCount }}
+  selector:
+    matchLabels:
+      apps: postgres
+  template:
+    metadata:
+      labels:
+        apps: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tags }}
+          ports:
+            - containerPort: {{ .Values.postgres.service.port }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-sec
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-sec
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: pg-sec
+                  key: POSTGRES_DB
+          volumeMounts:
+            - name: init 
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true 
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres-data
+          {{- with .Values.postgres.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            exec:
+              command: ["sh","-c", "pg_isready -U $(POSTGRES_USER) -d $(POSTGRES_DB)"]
+            initialDelaySeconds: 60
+            periodSeconds: 10
+      volumes:
+        - name: init
+          configMap:
+            name: pg-config
+
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+        namespace: devboard-app
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.postgres.storageClassName | quote }}
+        {{- with .Values.postgres.volresources }}
+        resources:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}

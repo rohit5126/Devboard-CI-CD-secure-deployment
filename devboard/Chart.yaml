@@ -1,0 +1,16 @@
+apiVersion: v2
+name: devboard
+description: A three tier node js application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+  - name: RohitKumar
+    url: https://github.com/rohit5126/Devboard-CI-CD-secure-deployment.git
+keywords:
+  - devboard
+  - Node
+  - Postgres
+  - Go 
+  - three tier
+
