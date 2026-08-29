@@ -1,0 +1,111 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: devboard-app
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "2"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+# Node frontend: accept traffic only from the ALB/ingress-controller,
+# and only allowed to call out to the Go API (plus DNS).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: node-frontend-policy
+  namespace: devboard-app
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "2"
+spec:
+  podSelector:
+    matchLabels:
+      apps: frontend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: envoy-gateway-system
+          podSelector:
+            matchLabels:
+              gateway.envoyproxy.io/owning-gateway-namespace: devboard-app
+              gateway.envoyproxy.io/owning-gateway-name: devboard-gateway          # tighten this to your ingress-controller namespace/labels if used
+      ports:
+        - port: 4173
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              apps: backend
+      ports:
+        - port: 8080
+    - to: []                        # allow DNS resolution
+      ports:
+        - port: 53
+          protocol: UDP
+---
+# Go API: accept traffic only from node-frontend, only allowed to call out to Postgres.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: go-api-policy
+  namespace: devboard-app
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "2"
+spec:
+  podSelector:
+    matchLabels:
+      apps: backend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              apps: frontend
+      ports:
+        - port: 8080
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              apps: postgres        # remove this block entirely if using RDS -
+      ports:                       # RDS egress is controlled by the AWS security group instead,
+        - port: 5432                # since RDS isn't a pod NetworkPolicy can select.
+    - to: []
+      ports:
+        - port: 53
+          protocol: UDP
+---
+# Postgres (only relevant if self-hosted in-cluster): accept only from go-api, no egress needed.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-policy
+  namespace: devboard-app
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "2"
+spec:
+  podSelector:
+    matchLabels:
+      apps: postgres
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              apps: backend
+      ports:
+        - port: 5432

@@ -91,7 +91,7 @@ postgres:
     limits:
       memory: "512Mi"
       cpu: "512m"
-  storageClassName: standard
+  storageClassName: gp2
 
 #backend deployment
 
@@ -124,9 +124,9 @@ frontend:
     repository: rohit5126/devboard-frontend
     tags: latest
   service: 
-    type: NodePort
+    type: ClusterIP
     port: 4173
-    nodePort: 30080
+    lb: 80
   resources:
     requests:
       cpu: 100m
@@ -139,6 +139,12 @@ frontend:
     minReplicas: 2
     maxReplicas: 4
     targetCPUUtilization: 70
+
+gateway:
+  port: 80
+  protocol: HTTP
+  
+
   
 
 

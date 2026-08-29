@@ -21,3 +21,14 @@
 .idea/
 *.tmproj
 .vscode/
+
+
+STEPS TO BE TAKEN NEXT -
+
+
+
+external secret
+secret rotation
+cert manager 
+deploy strategy either argocd/harness
+

@@ -98,3 +98,7 @@ curl against the new ELB hostname → confirms end-to-end traffic flow through E
 Update the README/architecture diagram to reflect Envoy Gateway in place of the AWS Load Balancer Controller.
 Confirm the frontend's Vite allowedHosts setting still covers the new ELB hostname (or remains wildcarded) so it isn't blocked again on any future hostname change.
 Consider adding a TLS listener to the Gateway once a real domain/ACM-equivalent certificate is available — currently HTTP only, same as the previous ALB setup.
+
+helm install eg oci://docker.io/envoyproxy/gateway-helm --version v1.5.9 -n envoy-gateway-system --create-namespace
+
+

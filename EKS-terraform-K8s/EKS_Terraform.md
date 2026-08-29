@@ -116,3 +116,13 @@ Apply order matters: 00 → 01 → 02 → 03/04 (and 05 only if you're not using
 NetworkPolicy enforcement: the default VPC CNI doesn't enforce NetworkPolicy objects out of the box on older EKS versions — you either need VPC CNI network policy support enabled (available on newer EKS/CNI versions) or a policy-enforcing CNI like Calico. Otherwise 06-network-policies.yaml applies cleanly but silently does nothing.
 RDS vs in-cluster Postgres: only apply 05-postgres-statefulset.yaml if you chose the self-hosted route from the Terraform step. If using RDS, delete the postgres block from 06-network-policies.yaml and just rely on the RDS security group instead (a NetworkPolicy can't select a non-pod endpoint like RDS).
 Placeholders to replace: <ECR_REPO>, <ACCOUNT_ID>, and the REPLACE_ME password — none of these will work as committed.
+
+
+**That annotation is the key to IRSA — IAM Roles for Service Accounts, which is how EKS pods get AWS permissions without you baking access keys into the container.**
+
+How it works:
+
+EKS clusters have an OIDC identity provider associated with them.
+When a pod uses this ServiceAccount, the EKS mutating webhook automatically injects a projected token (a signed JWT) and env vars like AWS_ROLE_ARN and AWS_WEB_IDENTITY_TOKEN_FILE into the pod.
+The AWS SDK inside your Go app (if it's reasonably recent) automatically picks up those env vars and calls sts:AssumeRoleWithWebIdentity, exchanging the JWT for temporary AWS credentials scoped to whatever permissions the IAM role go-api-irsa-role has.
+AWS trusts that JWT because the IAM role's trust policy explicitly points to your cluster's OIDC provider and constrains it to this specific namespace + service account name (system:serviceaccount:devboard-app:go-api-sa).

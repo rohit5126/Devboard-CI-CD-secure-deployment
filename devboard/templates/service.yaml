@@ -11,9 +11,8 @@ spec:
   selector:
     apps: frontend   
   ports:
-    - port: {{ .Values.frontend.service.port }}
+    - port: {{ .Values.frontend.service.lb }}
       targetPort: {{ .Values.frontend.service.port }}
-      nodePort: {{ .Values.frontend.service.nodePort }}
 
 ---
 
