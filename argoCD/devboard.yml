@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: https://github.com/rohit5126/Devboard-CI-CD-secure-deployment.git
     targetRevision: master
-    path: devboard
+    path: devboard/templates
     helm:
       valueFiles:
         - values.yaml
