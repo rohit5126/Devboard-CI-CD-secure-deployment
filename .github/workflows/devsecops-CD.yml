@@ -6,7 +6,7 @@ on:
     
 jobs:
   deploy-app:
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/merge.yml
     secrets: inherit
 
   OWASP-ZAP-scan:
