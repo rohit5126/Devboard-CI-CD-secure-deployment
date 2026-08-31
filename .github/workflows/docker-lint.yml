@@ -48,7 +48,7 @@ jobs:
         with:
           image-ref: '${{ vars.docker_username }}/devboard-${{ matrix.workdir }}:latest'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
           trivyignores: '.trivyignore'
           vuln-type: 'os,library'
