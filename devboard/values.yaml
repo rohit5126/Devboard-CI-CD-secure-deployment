@@ -94,7 +94,7 @@ backend:
   replicaCount: 2
   image:
     repository: rohit5126/devboard-backend
-    tags: "8b6d18f"
+    tags: "7feaccd"
   service:
     type: ClusterIP
     port: 8080
@@ -115,7 +115,7 @@ frontend:
   replicaCount: 2
   image:
     repository: rohit5126/devboard-frontend
-    tags: 8b6d18f
+    tags: 7feaccd
   service:
     type: ClusterIP
     port: 4173
