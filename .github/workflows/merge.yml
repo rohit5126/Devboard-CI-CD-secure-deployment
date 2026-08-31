@@ -1,5 +1,6 @@
 name: merge
 on:
+  workflow_call: 
   push:
     branches: [master]
     paths: 
