@@ -33,10 +33,12 @@ jobs:
       Tag: ${{ needs.Generate-tags.outputs.short-sha }}
       
   push-to-docker-Hub:
+    needs: [Generate-tags]
     uses: ./.github/workflows/docker-push.yml
     with:
       frontend-dockerfile-dir: frontend
       backend-dockerfile-dir: backend
+      Tag: ${{ needs.Generate-tags.outputs.short-sha }}
     secrets: 
       docker_username: ${{ vars.DOCKER_USER }}
       docker_password: ${{ secrets.DOCKER_TOKEN }}
