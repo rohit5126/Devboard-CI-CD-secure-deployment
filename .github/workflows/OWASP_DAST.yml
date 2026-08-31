@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v7
       - name: wait for services to be healthy
         run: |
-          timeout 900s sh -c 'until curl -s http://13.60.239.115:4173 > /dev/null; do sleep 2; done'
+          timeout 300s sh -c 'until curl -s http://13.60.239.115:4173 > /dev/null; do sleep 2; done'
 
       - name: OWASP ZAP Baseline scan
         uses: zaproxy/action-baseline@v0.14.0
