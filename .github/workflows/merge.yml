@@ -43,5 +43,4 @@ jobs:
       backend-dockerfile-dir: backend
       Tag: ${{ needs.Generate-tags.outputs.short-sha }}
     secrets: 
-      docker_username: ${{ vars.docker_username }}
       docker_password: ${{ secrets.docker_password }}
