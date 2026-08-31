@@ -4,6 +4,7 @@ on:
     inputs:
       frontend-dockerfile-dir: { required: true, type: string }
       backend-dockerfile-dir: { required: true, type: string }
+      Tag: { required: true, type: string }
     secrets:
       docker_username: { required: true }
       docker_password: { required: true }
@@ -28,5 +29,5 @@ jobs:
         with:
           context: ${{ matrix.workdir }}
           push: true
-          tags: ${{ secrets.docker_username }}/devboard-${{ matrix.workdir }}:latest
+          tags: ${{ secrets.docker_username }}/devboard-${{ matrix.workdir }}:${{ inputs.Tag }}
       
