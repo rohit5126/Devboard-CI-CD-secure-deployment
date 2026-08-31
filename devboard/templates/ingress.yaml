@@ -3,8 +3,7 @@ kind: GatewayClass
 metadata: 
   name: envoy
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "1"
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   controllerName: gateway.envoyproxy.io/gatewayclass-controller
 
@@ -16,8 +15,7 @@ metadata:
   name: devboard-gateway
   namespace: devboard-app
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "1"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   gatewayClassName: envoy
   listeners:
@@ -36,8 +34,7 @@ metadata:
   name: devboard-route
   namespace: devboard-app
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "1"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   parentRefs:
     - name: devboard-gateway

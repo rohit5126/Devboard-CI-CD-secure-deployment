@@ -4,8 +4,7 @@ metadata:
   name: frontend-service
   namespace: devboard-app
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "-1"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   type: {{ .Values.frontend.service.type }}     
   selector:
@@ -22,8 +21,7 @@ metadata:
   name: backend
   namespace: devboard-app
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-weight": "-1"
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   selector:
     apps: backend
