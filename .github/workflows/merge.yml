@@ -4,8 +4,8 @@ on:
   push:
     branches: [master]
     paths: 
-      - 'frontend/'
-      - 'backend/'
+      - 'frontend/**'
+      - 'backend/**'
 permissions:
   contents: write
   
