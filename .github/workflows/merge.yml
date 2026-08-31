@@ -2,7 +2,9 @@ name: merge
 on:
   push:
     branches: [master]
-
+    paths: 
+      - 'frontend/'
+      - 'backend/'
 permissions:
   contents: write
   
