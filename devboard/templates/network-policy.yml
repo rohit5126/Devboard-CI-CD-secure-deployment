@@ -4,7 +4,7 @@ metadata:
   name: default-deny-all
   namespace: devboard-app
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   podSelector: {}
   policyTypes:
@@ -19,7 +19,7 @@ metadata:
   name: node-frontend-policy
   namespace: devboard-app
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   podSelector:
     matchLabels:
@@ -57,7 +57,7 @@ metadata:
   name: go-api-policy
   namespace: devboard-app
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   podSelector:
     matchLabels:
@@ -91,7 +91,7 @@ metadata:
   name: postgres-policy
   namespace: devboard-app
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   podSelector:
     matchLabels:
