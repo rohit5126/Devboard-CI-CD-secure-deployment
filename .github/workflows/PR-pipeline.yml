@@ -34,7 +34,7 @@ jobs:
       frontend-dockerfile-dir: frontend
       backend-dockerfile-dir: backend
     secrets: 
-      docker_password: ${{ secrets.DOCKER_TOKEN }}
+      docker_password: ${{ secrets.docker_password }}
 
   Add-comment:
     runs-on: ubuntu-latest
