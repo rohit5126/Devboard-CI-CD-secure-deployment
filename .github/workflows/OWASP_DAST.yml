@@ -1,6 +1,7 @@
 name: OWASP ZAP DAST Scan
 on:
   workflow_call:
+  workflow_dispatch: 
 
 jobs:
   scan:
@@ -10,12 +11,12 @@ jobs:
         uses: actions/checkout@v7
       - name: wait for services to be healthy
         run: |
-          timeout 300s sh -c 'until curl -s http://13.60.239.115:4173 > /dev/null; do sleep 2; done'
+          timeout 300s sh -c 'until curl -s http://afa76b093be26456493cbaa2ff3933bd-205222894.eu-north-1.elb.amazonaws.com/ > /dev/null; do sleep 2; done'
 
       - name: OWASP ZAP Baseline scan
         uses: zaproxy/action-baseline@v0.14.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'http://13.60.239.115:4173'
+          target: 'http://afa76b093be26456493cbaa2ff3933bd-205222894.eu-north-1.elb.amazonaws.com/'
           fail_action: false
           allow_issue_writing: false
