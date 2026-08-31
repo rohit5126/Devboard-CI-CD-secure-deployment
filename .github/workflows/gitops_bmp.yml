@@ -1,0 +1,49 @@
+name: Gitops-Image-Bump
+
+on: 
+  workflow_call:
+    inputs:
+      Tag: { required: true, type: string }
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: write
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v6
+        
+      - name: 'Setup yq'
+        uses: dcarbone/install-yq-action@v1
+        with:
+          version: "v4.44.3"
+          
+      - name: 'Check yq'
+        run: |
+          which yq
+          yq --version
+
+      - name: update image tag in values.yaml
+        env:
+          tags: ${{ inputs.Tag }}
+
+        run: |
+          # Update backend image tag
+          yq -i '.backend.image.tags = env(tags)' devboard/values.yaml
+          
+          # Update frontend image tag
+          yq -i '.frontend.image.tags = env(tags)' devboard/values.yaml
+
+      - name: Commit and Push Changes
+        run: |
+          # 1. Identify the virtual bot making the change
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 2. Stage, commit, and push the modified deployment file
+          git add devboard/values.yaml
+          git commit -m "chore: update both frontend and backend image tags to latest code [skip ci]"
+          git push
+
+      
