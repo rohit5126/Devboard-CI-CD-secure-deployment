@@ -28,12 +28,6 @@ jobs:
       - name: Set image tag
         id: tag
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-
-  ArgoCD-deployment:
-    needs: [Generate-tags]
-    uses: ./.github/workflows/gitops_bump.yml
-    with:
-      Tag: ${{ needs.Generate-tags.outputs.short-sha }}
       
   push-to-docker-Hub:
     needs: [Generate-tags]
@@ -44,3 +38,9 @@ jobs:
       Tag: ${{ needs.Generate-tags.outputs.short-sha }}
     secrets: 
       docker_password: ${{ secrets.docker_password }}
+
+  ArgoCD-deployment:
+    needs: [Generate-tags, push-to-docker-Hub]
+    uses: ./.github/workflows/gitops_bump.yml
+    with:
+      Tag: ${{ needs.Generate-tags.outputs.short-sha }}
