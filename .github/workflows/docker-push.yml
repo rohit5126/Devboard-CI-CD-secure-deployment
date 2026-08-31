@@ -6,7 +6,6 @@ on:
       backend-dockerfile-dir: { required: true, type: string }
       Tag: { required: true, type: string }
     secrets:
-      docker_username: { required: true }
       docker_password: { required: true }
 
 jobs:
