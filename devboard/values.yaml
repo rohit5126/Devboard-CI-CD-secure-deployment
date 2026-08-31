@@ -1,10 +1,9 @@
 
 #secret
-secret: 
+secret:
   POSTGRES_USER: devboard
   POSTGRES_PASSWORD: devboard
   POSTGRES_DB: devboard
-
 #config
 config:
   seed: |
@@ -70,12 +69,10 @@ config:
         BEFORE UPDATE ON tasks
         FOR EACH ROW
         EXECUTE FUNCTION touch_updated_at();
-
 #statefulset
-
 postgres:
   replicaCount: 1
-  image: 
+  image:
     repository: postgres
     tags: "16-alpine"
   service:
@@ -84,7 +81,7 @@ postgres:
   volresources:
     requests:
       storage: 2Gi
-  resources:  
+  resources:
     requests:
       memory: "256Mi"
       cpu: "256m"
@@ -92,18 +89,16 @@ postgres:
       memory: "512Mi"
       cpu: "512m"
   storageClassName: gp2
-
 #backend deployment
-
 backend:
   replicaCount: 2
   image:
     repository: rohit5126/devboard-backend
-    tags: "latest"
+    tags: "beca686"
   service:
     type: ClusterIP
     port: 8080
-  resources:  
+  resources:
     requests:
       memory: "256Mi"
       cpu: "256m"
@@ -115,15 +110,13 @@ backend:
     minReplicas: 2
     maxReplicas: 4
     targetCPUUtilization: 70
-
 #frontend deployment
-
 frontend:
   replicaCount: 2
   image:
     repository: rohit5126/devboard-frontend
-    tags: latest
-  service: 
+    tags: beca686
+  service:
     type: ClusterIP
     port: 4173
     lb: 80
@@ -139,13 +132,6 @@ frontend:
     minReplicas: 2
     maxReplicas: 4
     targetCPUUtilization: 70
-
 gateway:
   port: 80
   protocol: HTTP
-  
-
-  
-
-
-
