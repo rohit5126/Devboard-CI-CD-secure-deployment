@@ -16,4 +16,4 @@ dist/
 #terraform
 terraform/.terraform/
 S3-backend/.terraform/
-S3-backend/terraform**
+S3-backend/terraform.*
