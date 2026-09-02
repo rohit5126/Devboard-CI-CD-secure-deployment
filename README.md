@@ -9,10 +9,10 @@ This project demonstrates a **complete Shift-Left + Shift-Right security approac
 ## 🚀 Key Highlights
 
 * 🔄 PR-based automated validation pipeline
-* 🔐 Integrated DevSecOps (SAST, Dependency Scan, Secret Scan, DAST)
-* 🐳 Docker linting, build & push automation
+* 🔐 Integrated DevSecOps (SAST, Dependency Scan, Secret Scan, Docker linting)
+* 🐳 build & push automation and Sonar Scan on merge
 * ⚡ Modular reusable GitHub Actions workflows
-* 🚀 Event-driven CD using `workflow_run`
+* 🚀 argoCD Sync deployment using gitops
 * 🛡️ OWASP ZAP runtime security testing
 
 ---
@@ -20,7 +20,7 @@ This project demonstrates a **complete Shift-Left + Shift-Right security approac
 ## 🏗️ Pipeline Architecture
 
 ```text
-Pull Request → CI Checks → Merge (CI) → Deploy → DAST Scan
+Pull Request → CI Checks → Merge (CI) → update image tags → argoCD sync → DAST Scan
 ```
 
 ---
@@ -85,14 +85,23 @@ push:
 * Runs static code analysis
 * Ensures code quality & maintainability
 
-#### 2. Docker Build & Push
+#### 2. Tags generated
 
-* Builds frontend & backend images
-* Pushes images to Docker Hub
+* generate random tags
+
+
+#### 3. Docker Build & Push
+
+* Builds frontend & backend images 
+* Pushes images to Docker Hub with tags
+
+#### 4. update in Helm values.yml
+
+* update tags using yq
 
 ---
 
-## 🚀 CD Pipeline – `Devsecops-deploy.yml`
+## 🚀 Dast Pipeline – DAST scan
 
 Triggered via:
 
@@ -101,12 +110,6 @@ workflow_run:
   workflows: [merge]
   types: completed
 ```
-
-### 🔹 Jobs
-
-✔ **Deploy Application**
-
-* Uses reusable deployment workflow
 
 ✔ **OWASP ZAP Scan (DAST)**
 
@@ -122,7 +125,7 @@ workflow_run:
 | PR Stage     | SAST, Secret Scan, Dependency Scan |
 | Build Stage  | Docker Lint & Secure Build         |
 | CI Stage     | SonarQube Analysis                 |
-| Deploy Stage | Controlled Deployment              |
+| Update Stage | Tags Update            |
 | Runtime      | OWASP ZAP (DAST)                   |
 
 ---
@@ -132,9 +135,9 @@ workflow_run:
 ```bash
 .
 ├── .github/workflows/
-│   ├── PR-pipeline-checks.yml
+│   ├── PR-pipeline.yml
 │   ├── merge.yml
-│   ├── Devsecops-deploy.yml
+│   ├── gitops_bump.yml
 │   ├── Node-code-quality.yml
 │   ├── Go-code-quality.yml
 │   ├── secret-scanning.yml
@@ -142,7 +145,6 @@ workflow_run:
 │   ├── docker-lint.yml
 │   ├── Sonarcube.yml
 │   ├── docker-push.yml
-│   ├── deploy.yml
 │   ├── OWASP_DAST.yml
 │
 ├── frontend/
@@ -161,6 +163,7 @@ This project follows modern DevOps best practices:
 * ✅ CI/CD separation
 * ✅ Event-driven pipeline chaining
 * ✅ Automated PR feedback
+* ✅ Autodeploy using Gitops
 
 ---
 

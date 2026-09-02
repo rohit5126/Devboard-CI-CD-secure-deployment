@@ -25,7 +25,7 @@ spec:
               serve_from_sub_path: true
           admin:
             adminUser: admin
-            adminPassword: admin123
+            adminPassword: prom-operator
           service:
             type: ClusterIP
             port: 80
