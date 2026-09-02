@@ -24,7 +24,7 @@ spec:
     port: {{.Values.gateway.port }}
     allowedRoutes:
       namespaces:
-        from: Same
+        from: All
 
 ---
 
