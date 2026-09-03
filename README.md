@@ -6,6 +6,8 @@ A production-grade **DevSecOps CI/CD pipeline** implementing **automated code qu
 
 This project demonstrates a **complete Shift-Left + Shift-Right security approach** with **PR-based validation, modular CI workflows, event-driven CD pipeline, GitOps deployment, and cluster monitoring.**
 
+<img width="1823" height="893" alt="Screenshot From 2026-09-02 12-48-07" src="https://github.com/user-attachments/assets/959f7c2a-b071-4e1f-a6c5-c125033132e5" />
+
 ---
 
 ## 🚀 Key Highlights
