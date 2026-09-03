@@ -247,9 +247,9 @@ siege -c 60 -t 5m "http://<load-balancer-endpoint>/"
 │   ├── Chart.yaml
 │   ├── values.yaml
 │   └── .helmignore
-├── EKS-terraform-K8s/         # Terraform for EKS cluster provisioning
+├── EKS-K8s/                   # manifest files for deploying without helm
 ├── S3-backend/                # Terraform remote state backend config
-├── terraform/                 # Additional Terraform modules
+├── terraform/                 # Terraform for EKS cluster provisioning
 ├── frontend/                  # React (Vite) app
 │   └── src/
 │       ├── api/
