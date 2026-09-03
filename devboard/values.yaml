@@ -1,9 +1,5 @@
 
-#secret
-secret:
-  POSTGRES_USER: devboard
-  POSTGRES_PASSWORD: devboard
-  POSTGRES_DB: devboard
+
 #config
 config:
   seed: |
